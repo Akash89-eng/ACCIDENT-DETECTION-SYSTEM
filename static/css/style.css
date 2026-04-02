@@ -1,0 +1,208 @@
+/* Premium Styles for Accident Detection System */
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --danger-color: #f72585;
+    --warning-color: #f8961e;
+    --success-color: #4cc9f0;
+    --dark-bg: #1a1a2e;
+    --card-bg: #16213e;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.brand-text {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+.premium-badge {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #1a1a2e;
+    margin-left: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.sidebar {
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    margin-top: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.sidebar .nav-link {
+    color: #fff;
+    margin: 10px 0;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background: linear-gradient(135deg, #4361ee, #3f37c9);
+    box-shadow: 0 5px 15px rgba(67,97,238,0.3);
+}
+
+.main-content {
+    padding: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.95);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-card h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.stat-card small {
+    opacity: 0.8;
+}
+
+.btn {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4361ee, #3f37c9);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(67,97,238,0.4);
+}
+
+#video-feed {
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    background: #000;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.toast {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+}
+
+.alert-toast-critical {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.evidence-card {
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.evidence-card:hover {
+    transform: scale(1.05);
+}
+
+.evidence-card img {
+    border-radius: 10px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.progress {
+    height: 25px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+    border-radius: 10px;
+    font-weight: bold;
+    line-height: 25px;
+}
+
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead {
+    background: linear-gradient(135deg, #4361ee, #3f37c9);
+    color: white;
+}
+
+.table tbody tr:hover {
+    background: rgba(67,97,238,0.1);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        margin-bottom: 20px;
+    }
+    
+    .stat-card h2 {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+}
