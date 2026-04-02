@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Accident Detection System | Premium</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Premium Navbar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-car-crash"></i>
+                <span class="brand-text">Intelligent Accident Detection System</span>
+                <span class="badge bg-danger premium-badge">PREMIUM</span>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-item text-light">
+                    <i class="fas fa-chart-line"></i>
+                    <span id="live-status">Live Monitoring Active</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5 pt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar">
+                <div class="nav flex-column nav-pills">
+                    <a class="nav-link active" data-bs-toggle="pill" href="#dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a class="nav-link" data-bs-toggle="pill" href="#live-detection">
+                        <i class="fas fa-video"></i> Live Detection
+                    </a>
+                    <a class="nav-link" data-bs-toggle="pill" href="#evidence">
+                        <i class="fas fa-folder-open"></i> Evidence
+                    </a>
+                    <a class="nav-link" data-bs-toggle="pill" href="#vehicles">
+                        <i class="fas fa-truck"></i> Vehicles
+                    </a>
+                    <a class="nav-link" data-bs-toggle="pill" href="#alerts">
+                        <i class="fas fa-bell"></i> Alerts
+                    </a>
+                    <a class="nav-link" data-bs-toggle="pill" href="#reports">
+                        <i class="fas fa-chart-bar"></i> Reports
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <h2><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                        <hr>
+                        
+                        <div class="row stats-cards">
+                            <div class="col-md-3">
+                                <div class="card stat-card bg-primary">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Accidents</h5>
+                                        <h2 id="total-accidents">0</h2>
+                                        <small>Last 30 days</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card bg-danger">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Active Alerts</h5>
+                                        <h2 id="active-alerts">0</h2>
+                                        <small>Requiring attention</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card bg-success">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Vehicles Registered</h5>
+                                        <h2 id="total-vehicles">0</h2>
+                                        <small>In database</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card stat-card bg-warning">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Evidence Captured</h5>
+                                        <h2 id="total-evidence">0</h2>
+                                        <small>Accident records</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Detection Performance</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="performance-chart"></canvas>
+                                        <div class="mt-3">
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar bg-success" style="width: 94.2%">94.2% Accuracy</div>
+                                            </div>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar bg-info" style="width: 89.5%">89.5% Precision</div>
+                                            </div>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar bg-warning" style="width: 87.3%">87.3% Recall</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Recent Accidents</h5>
+                                    </div>
+                                    <div class="card-body" id="recent-accidents-list">
+                                        <div class="text-center">Loading...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Detection Tab -->
+                    <div class="tab-pane fade" id="live-detection">
+                        <h2><i class="fas fa-video"></i> Live Accident Detection</h2>
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Camera Feed</h5>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img id="video-feed" src="" class="img-fluid" style="max-height: 500px;">
+                                        <div class="mt-3">
+                                            <button class="btn btn-primary" onclick="startDetection()">
+                                                <i class="fas fa-play"></i> Start Detection
+                                            </button>
+                                            <button class="btn btn-danger" onclick="stopDetection()">
+                                                <i class="fas fa-stop"></i> Stop Detection
+                                            </button>
+                                            <button class="btn btn-success" onclick="captureFrame()">
+                                                <i class="fas fa-camera"></i> Capture Frame
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Detection Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="detection-status" class="alert alert-success">
+                                            <i class="fas fa-shield-alt"></i> Monitoring...
+                                        </div>
+                                        <div class="info-box">
+                                            <h6>Vehicle Count: <span id="vehicle-count">0</span></h6>
+                                            <h6>Confidence: <span id="confidence">0%</span></h6>
+                                            <h6>Severity: <span id="severity">NONE</span></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5>Upload Video</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <input type="file" id="video-upload" accept="video/*" class="form-control">
+                                        <button class="btn btn-primary mt-2" onclick="uploadVideo()">
+                                            <i class="fas fa-upload"></i> Process Video
+                                        </button>
+                                        <div id="upload-status" class="mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Tab -->
+                    <div class="tab-pane fade" id="evidence">
+                        <h2><i class="fas fa-folder-open"></i> Accident Evidence</h2>
+                        <hr>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Captured Evidence</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="evidence-gallery" class="row">
+                                    <div class="text-center">Loading evidence...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vehicles Tab -->
+                    <div class="tab-pane fade" id="vehicles">
+                        <h2><i class="fas fa-truck"></i> Vehicle Management</h2>
+                        <hr>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
+                                    <i class="fas fa-plus"></i> Add Vehicle
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped" id="vehicles-table">
+                                    <thead>
+                                        <tr><th>License Plate</th><th>Owner</th><th>Phone</th><th>Email</th><th>Actions</th></tr>
+                                    </thead>
+                                    <tbody id="vehicles-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Tab -->
+                    <div class="tab-pane fade" id="alerts">
+                        <h2><i class="fas fa-bell"></i> Alert History</h2>
+                        <hr>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="alerts-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Tab -->
+                    <div class="tab-pane fade" id="reports">
+                        <h2><i class="fas fa-chart-bar"></i> Reports & Analytics</h2>
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Accidents by Severity</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="severity-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Export Report</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <button class="btn btn-success" onclick="exportReport()">
+                                            <i class="fas fa-download"></i> Export JSON Report
+                                        </button>
+                                        <div id="export-status" class="mt-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div class="modal fade" id="addVehicleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Vehicle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="license-plate" class="form-control mb-2" placeholder="License Plate (e.g., TN01AB1234)">
+                    <input type="text" id="owner-name" class="form-control mb-2" placeholder="Owner Name">
+                    <input type="tel" id="phone" class="form-control mb-2" placeholder="Phone Number">
+                    <input type="email" id="email" class="form-control mb-2" placeholder="Email Address">
+                    <input type="text" id="vehicle-model" class="form-control mb-2" placeholder="Vehicle Model">
+                    <input type="text" id="vehicle-color" class="form-control mb-2" placeholder="Vehicle Color">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addVehicle()">Add Vehicle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="alert-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto"><i class="fas fa-exclamation-triangle"></i> Accident Alert</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="alert-message"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
